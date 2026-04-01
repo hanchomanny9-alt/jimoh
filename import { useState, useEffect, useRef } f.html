@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WiseSkills – Your Scores Know Where You Belong</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0D1117;
+    --surface: #161B22;
+    --card: #1C2333;
+    --border: #30363D;
+    --accent: #F0A500;
+    --accent-soft: rgba(240,165,0,0.13);
+    --green: #3FB950;
+    --red: #F85149;
+    --blue: #58A6FF;
+    --text: #E6EDF3;
+    --muted: #8B949E;
+    --pill: #21262D;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .anim { animation: fadeUp 0.4s ease both; }
+  .anim-1 { animation-delay: 0.05s; }
+  .anim-2 { animation-delay: 0.1s; }
+  .anim-3 { animation-delay: 0.15s; }
+  .anim-4 { animation-delay: 0.2s; }
+  .anim-5 { animation-delay: 0.25s; }
+
+  /* Nav */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(13,17,23,0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+  }
+  .nav-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; height: 60px; gap: 32px;
+  }
+  .nav-logo {
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-logo-icon {
+    width: 28px; height: 28px; background: var(--accent); border-radius: 8px;
+    display: grid; place-items: center; font-size: 14px; font-weight: 800;
+    color: #000; font-family: 'Syne', sans-serif;
+  }
+  .nav-logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; color: var(--text); }
+  .nav-tabs { display: flex; gap: 4px; margin-left: auto; }
+  .nav-tab {
+    background: none; color: var(--muted); border: 1px solid transparent;
+    padding: 6px 16px; border-radius: 8px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 14px;
+    transition: all .2s;
+  }
+  .nav-tab.active {
+    background: var(--accent-soft); color: var(--accent);
+    border-color: rgba(240,165,0,0.2);
+  }
+
+  /* Pages */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Container */
+  .container { max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px; }
+  .container-sm { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+  .container-xs { max-width: 600px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* Typography */
+  h1 { font-family: 'Syne', sans-serif; font-weight: 800; }
+  h2, h3 { font-family: 'Syne', sans-serif; font-weight: 700; }
+
+  /* Badges & Tags */
+  .tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; letter-spacing: .3px; }
+  .tag-urgent { background: rgba(248,81,73,0.13); color: var(--red); border: 1px solid rgba(248,81,73,0.2); }
+  .tag-new { background: rgba(63,185,80,0.13); color: var(--green); border: 1px solid rgba(63,185,80,0.2); }
+  .tag-high { background: rgba(240,165,0,0.13); color: var(--accent); border: 1px solid rgba(240,165,0,0.2); }
+  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; letter-spacing: .3px; }
+  .badge-green { background: rgba(63,185,80,0.13); color: var(--green); border: 1px solid rgba(63,185,80,0.2); }
+  .badge-blue { background: rgba(88,166,255,0.13); color: var(--blue); border: 1px solid rgba(88,166,255,0.2); }
+  .badge-accent { background: rgba(240,165,0,0.13); color: var(--accent); border: 1px solid rgba(240,165,0,0.2); }
+  .badge-muted { background: rgba(139,148,158,0.13); color: var(--muted); border: 1px solid rgba(139,148,158,0.2); }
+  .pill {
+    background: var(--pill); color: var(--muted); font-size: 12px;
+    padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border);
+    display: inline-block;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: var(--accent); color: #000; border: none;
+    border-radius: 10px; padding: 14px 28px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+    cursor: pointer; transition: opacity .2s;
+  }
+  .btn-primary:hover { opacity: .88; }
+  .btn-outline {
+    background: none; color: var(--text); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 28px;
+    font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 15px;
+    cursor: pointer; transition: border-color .2s;
+  }
+  .btn-outline:hover { border-color: var(--accent); }
+
+  /* Inputs & Selects */
+  input[type="text"], select {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 14px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none;
+    transition: border-color .2s;
+  }
+  input[type="text"]:focus, select:focus { border-color: var(--accent); }
+  select { cursor: pointer; }
+
+  /* ── HOME PAGE ── */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 48px; align-items: start;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent-soft); border: 1px solid rgba(240,165,0,0.2);
+    border-radius: 999px; padding: 4px 14px; font-size: 12px;
+    color: var(--accent); font-weight: 600; margin-bottom: 20px;
+  }
+  .hero-h1 {
+    font-size: clamp(36px,5vw,58px); line-height: 1.1; margin-bottom: 20px;
+  }
+  .hero-h1 span { color: var(--accent); }
+  .hero-p { color: var(--muted); font-size: 16px; line-height: 1.7; max-width: 500px; margin-bottom: 32px; }
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .stats-row { display: flex; gap: 32px; margin-top: 40px; flex-wrap: wrap; }
+  .stat-n { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 24px; color: var(--accent); }
+  .stat-l { color: var(--muted); font-size: 12px; }
+
+  /* Quick Match Widget */
+  .widget-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+  }
+  .widget-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+  .qm-progress-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .qm-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 16px; }
+  .qm-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .3s; }
+  .qm-question { font-weight: 600; font-size: 15px; margin-bottom: 12px; }
+  .qm-option {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 16px; color: var(--text);
+    cursor: pointer; text-align: left; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; transition: all .2s; width: 100%; margin-bottom: 8px;
+    display: block;
+  }
+  .qm-option:hover { background: var(--accent-soft); border-color: var(--accent); }
+  .qm-result-item {
+    display: flex; align-items: center; gap: 12px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px;
+    margin-bottom: 8px;
+  }
+  .qm-cta {
+    background: var(--accent-soft); border: 1px solid rgba(240,165,0,0.2);
+    border-radius: 10px; padding: 12px 14px; font-size: 13px;
+    color: var(--accent); margin-top: 4px; margin-bottom: 8px;
+  }
+
+  /* Sections */
+  .section { margin-top: 80px; }
+  .section-header { text-align: center; margin-bottom: 48px; }
+  .section-title { font-size: 28px; margin-bottom: 8px; }
+  .section-sub { color: var(--muted); font-size: 16px; }
+  .section-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .section-top h2 { font-size: 24px; }
+  .see-all { background: none; color: var(--accent); border: none; cursor: pointer; font-size: 14px; font-weight: 600; }
+
+  /* Process grid */
+  .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; }
+  .process-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px 20px; text-align: center;
+  }
+  .process-icon { font-size: 32px; margin-bottom: 12px; }
+  .process-step { font-size: 12px; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+  .process-title { font-size: 18px; margin-bottom: 8px; }
+  .process-desc { color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+  /* Testimonials */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .testimonial-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+  }
+  .testimonial-quote { font-size: 14px; line-height: 1.6; margin-bottom: 16px; font-style: italic; }
+  .testimonial-name { font-weight: 600; }
+  .testimonial-role { color: var(--muted); font-size: 12px; }
+
+  /* Pricing */
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .pricing-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px 20px; position: relative;
+  }
+  .pricing-card.popular { border-color: var(--accent); }
+  .pricing-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #000; font-size: 11px; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px;
+  }
+  .pricing-name { font-size: 20px; }
+  .pricing-price { font-size: 32px; font-weight: 800; font-family: 'Syne', sans-serif; margin: 16px 0 8px; }
+  .pricing-desc { color: var(--muted); font-size: 12px; margin-bottom: 24px; }
+  .pricing-features { list-style: none; padding: 0; margin: 0 0 24px; font-size: 13px; display: flex; flex-direction: column; gap: 8px; }
+  .pricing-features li { display: flex; align-items: center; gap: 8px; }
+  .pricing-features li span { color: var(--green); }
+  .btn-pricing-primary {
+    width: 100%; background: var(--accent); color: #000; border: none;
+    border-radius: 8px; padding: 12px; font-family: 'Syne', sans-serif;
+    font-weight: 700; cursor: pointer; font-size: 14px; transition: opacity .2s;
+  }
+  .btn-pricing-primary:hover { opacity: .88; }
+  .btn-pricing-outline {
+    width: 100%; background: transparent; color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px; padding: 12px;
+    font-family: 'Syne', sans-serif; font-weight: 700; cursor: pointer;
+    font-size: 14px; transition: border-color .2s;
+  }
+  .btn-pricing-outline:hover { border-color: var(--accent); }
+
+  /* FAQ */
+  .faq-wrap { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+  .faq-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px;
+  }
+  .faq-q { font-size: 16px; margin-bottom: 8px; }
+  .faq-a { color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+  /* Careers Grid */
+  .careers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+  /* Career Card */
+  .career-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px; cursor: pointer;
+    transition: all .2s; position: relative; overflow: hidden;
+  }
+  .career-card:hover { border-color: rgba(240,165,0,.4); transform: translateY(-2px); }
+  .career-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+  .career-emoji { font-size: 32px; }
+  .career-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+  .career-desc { color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 12px; }
+  .career-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .career-details {
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+    display: none; animation: fadeUp .2s ease;
+  }
+  .career-details.open { display: block; }
+  .career-detail-row { display: flex; justify-content: space-between; font-size: 13px; margin-top: 6px; }
+  .career-detail-row:first-child { margin-top: 0; }
+  .detail-label { color: var(--muted); }
+  .detail-value { font-weight: 500; }
+  .detail-value.green { color: var(--green); font-weight: 600; }
+
+  /* Careers Page Filters */
+  .filters-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .filters-row input { flex: 1 1 220px; }
+  .results-count { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+
+  /* Scholarships */
+  .schol-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+  .schol-tab {
+    background: none; color: var(--muted); border: 1px solid var(--border);
+    padding: 8px 20px; border-radius: 8px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 14px;
+    transition: all .2s;
+  }
+  .schol-tab.active { background: var(--accent-soft); color: var(--accent); border-color: rgba(240,165,0,.2); }
+  .schol-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 24px; margin-bottom: 16px;
+    transition: border-color .2s;
+  }
+  .schol-card.saved { border-color: rgba(240,165,0,.33); }
+  .schol-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .schol-info { flex: 1; }
+  .schol-name-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+  .schol-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; }
+  .schol-provider { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+  .schol-meta { display: flex; gap: 16px; font-size: 13px; flex-wrap: wrap; }
+  .schol-actions { display: flex; gap: 8px; align-items: flex-start; flex-shrink: 0; }
+  .btn-save {
+    background: var(--surface); color: var(--muted); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 16px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 13px;
+    transition: all .2s; white-space: nowrap;
+  }
+  .btn-save.saved { background: var(--accent-soft); color: var(--accent); border-color: rgba(240,165,0,.27); }
+  .btn-apply {
+    background: var(--accent); color: #000; border: none;
+    border-radius: 8px; padding: 8px 16px; cursor: pointer;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
+    text-decoration: none; display: inline-block; transition: opacity .2s;
+    white-space: nowrap;
+  }
+  .btn-apply:hover { opacity: .88; }
+  .checklist-wrap { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); display: none; }
+  .checklist-wrap.open { display: block; }
+  .checklist-label { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 10px; letter-spacing: .5px; text-transform: uppercase; }
+  .checklist-items { display: flex; flex-direction: column; gap: 8px; }
+  .checklist-item { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; }
+  .checklist-item input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+  .checklist-item span.checked { color: var(--muted); text-decoration: line-through; }
+  .checklist-count { margin-top: 10px; font-size: 12px; color: var(--muted); }
+
+  /* Assessment */
+  .assessment-progress { margin-bottom: 40px; }
+  .assessment-progress-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .assessment-bar { height: 4px; background: var(--border); border-radius: 2px; }
+  .assessment-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #FFD700); border-radius: 2px; transition: width .4s ease; }
+  .assessment-q { font-size: 22px; margin-bottom: 28px; line-height: 1.3; }
+  .assessment-options { display: flex; flex-direction: column; gap: 10px; }
+  .assessment-option {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px; color: var(--text);
+    cursor: pointer; text-align: left; font-family: 'DM Sans', sans-serif;
+    font-size: 15px; transition: all .2s; width: 100%;
+  }
+  .assessment-option:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .btn-back { background: none; color: var(--muted); border: none; cursor: pointer; font-size: 14px; margin-top: 24px; }
+
+  /* Results */
+  .results-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .results-list { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+  .result-item {
+    display: flex; align-items: center; gap: 16px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px;
+    transition: border-color .2s;
+  }
+  .result-item.top { background: var(--accent-soft); border-color: rgba(240,165,0,.33); }
+  .result-rank { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: var(--muted); min-width: 32px; }
+  .result-rank.top { color: var(--accent); }
+  .result-emoji { font-size: 28px; }
+  .result-info { flex: 1; }
+  .result-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; }
+  .result-sub { color: var(--muted); font-size: 13px; }
+  .result-right { text-align: right; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+  .result-income { color: var(--green); font-size: 13px; font-weight: 600; }
+
+  /* WhatsApp CTA */
+  .wa-cta {
+    margin-top: 64px;
+    background: linear-gradient(135deg,rgba(37,211,102,.13),rgba(37,211,102,.07));
+    border: 1px solid rgba(37,211,102,.2); border-radius: 16px;
+    padding: 32px 36px; display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 20px;
+  }
+  .wa-cta h3 { font-size: 20px; margin-bottom: 6px; }
+  .wa-cta p { color: var(--muted); font-size: 14px; }
+  .wa-btn {
+    background: #25D366; color: #fff; border: none; border-radius: 10px;
+    padding: 12px 24px; font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block;
+    transition: opacity .2s;
+  }
+  .wa-btn:hover { opacity: .88; }
+
+  /* Floating WA */
+  .wa-float {
+    position: fixed; bottom: 28px; right: 28px; width: 52px; height: 52px;
+    background: #25D366; border-radius: 50%; display: grid; place-items: center;
+    font-size: 24px; box-shadow: 0 4px 20px rgba(37,211,102,.27);
+    text-decoration: none; z-index: 100; transition: transform .2s;
+  }
+  .wa-float:hover { transform: scale(1.1); }
+
+  /* Empty state */
+  .empty { text-align: center; color: var(--muted); padding: 60px; font-size: 16px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-grid { grid-template-columns: 1fr !important; }
+    .nav-tabs .nav-tab { padding: 6px 10px; font-size: 13px; }
+    .wa-cta { flex-direction: column; }
+  }
+  @media (max-width: 480px) {
+    .nav-tabs .nav-tab span.full { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <button class="nav-logo" onclick="showTab('home')">
+      <div class="nav-logo-icon">W</div>
+      <span class="nav-logo-text">WiseSkills</span>
+    </button>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="home" onclick="showTab('home')">Home</button>
+      <button class="nav-tab" data-tab="careers" onclick="showTab('careers')">Careers</button>
+      <button class="nav-tab" data-tab="scholarships" onclick="showTab('scholarships')">Scholarships</button>
+      <button class="nav-tab" data-tab="assessment" onclick="showTab('assessment')">Assessment</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HOME PAGE
+════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <div class="container">
+
+    <!-- Hero -->
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge anim">👁 For WAEC &amp; JAMB Graduates</div>
+        <h1 class="hero-h1 anim anim-1">Your Scores Know<br /><span>Where You Belong.</span></h1>
+        <p class="hero-p anim anim-2">WiseSkills analyses your WAEC/JAMB results, your passions, and your personality to map out the career you were made for — not just the one your grades allow.</p>
+        <div class="hero-btns anim anim-3">
+          <button class="btn-primary" onclick="showTab('assessment')">Get My Career Match →</button>
+          <button class="btn-outline" onclick="showTab('careers')">Explore Careers</button>
+        </div>
+        <div class="stats-row anim anim-4">
+          <div><div class="stat-n">12,000+</div><div class="stat-l">Students Guided</div></div>
+          <div><div class="stat-n">150+</div><div class="stat-l">Career Paths Mapped</div></div>
+          <div><div class="stat-n">36</div><div class="stat-l">States Covered</div></div>
+          <div><div class="stat-n">94%</div><div class="stat-l">Satisfaction Rate</div></div>
+        </div>
+      </div>
+
+      <!-- Quick Match Widget -->
+      <div class="widget-box anim anim-2">
+        <div class="widget-title">Quick Match Preview</div>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">Answer 2 questions for an instant preview</p>
+        <div id="qm-container"></div>
+      </div>
+    </div>
+
+    <!-- Process Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">The Process</h2>
+        <p class="section-sub">Four Steps to Career Clarity</p>
+      </div>
+      <div class="process-grid">
+        <div class="process-card anim anim-1">
+          <div class="process-icon">📋</div>
+          <div class="process-step">STEP 01</div>
+          <h3 class="process-title">Enter Your Results</h3>
+          <p class="process-desc">Input your WAEC subject grades and JAMB score. We accept predicted grades too.</p>
+        </div>
+        <div class="process-card anim anim-2">
+          <div class="process-icon">❤️</div>
+          <div class="process-step">STEP 02</div>
+          <h3 class="process-title">Tell Us Your Hobbies</h3>
+          <p class="process-desc">From coding to cooking — your hobbies are data points.</p>
+        </div>
+        <div class="process-card anim anim-3">
+          <div class="process-icon">🧠</div>
+          <div class="process-step">STEP 03</div>
+          <h3 class="process-title">Take the Aptitude Quiz</h3>
+          <p class="process-desc">A 5-minute psychometric assessment reveals your thinking style.</p>
+        </div>
+        <div class="process-card anim anim-4">
+          <div class="process-icon">📖</div>
+          <div class="process-step">STEP 04</div>
+          <h3 class="process-title">Receive Your Career Roadmap</h3>
+          <p class="process-desc">Get a personalised report with top 5 careers, universities, and next steps.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Student Stories</h2>
+        <p class="section-sub">They Were Confused. Now They're Certain.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card anim anim-1">
+          <p class="testimonial-quote">"I had a B2 in Mathematics but everyone kept pushing me toward medicine. WiseSkills showed me Software Engineering was a 96% match. I'm now thriving in my second year."</p>
+          <div class="testimonial-name">Adaeze Okafor</div>
+          <div class="testimonial-role">100 Level, Computer Science, UNILAG</div>
+        </div>
+        <div class="testimonial-card anim anim-2">
+          <p class="testimonial-quote">"I scored 198 in JAMB and thought my dreams were over. WiseSkills found five excellent polytechnic routes I never knew existed. I've already started a small business."</p>
+          <div class="testimonial-name">Babatunde Mustapha</div>
+          <div class="testimonial-role">ND2, Business Admin, Yaba Tech</div>
+        </div>
+        <div class="testimonial-card anim anim-3">
+          <p class="testimonial-quote">"As a girl from Borno State, no one told me I could be an engineer. WiseSkills matched me with Petroleum Engineering at 88% and listed the exact scholarships I needed."</p>
+          <div class="testimonial-name">Fatima Kyari</div>
+          <div class="testimonial-role">200 Level, Petroleum Engineering, FUTA</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Simple Pricing</h2>
+        <p class="section-sub">Invest in Clarity. Save Years of Regret.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card anim anim-1">
+          <h3 class="pricing-name">Starter</h3>
+          <div class="pricing-price">Free</div>
+          <div class="pricing-desc">No credit card needed</div>
+          <ul class="pricing-features">
+            <li><span>✓</span> Top 3 career matches</li>
+            <li><span>✓</span> WAEC &amp; JAMB analysis</li>
+            <li><span>✓</span> Hobby-to-career mapping</li>
+            <li><span>✓</span> Basic aptitude quiz</li>
+            <li><span>✓</span> University shortlist (3 schools)</li>
+          </ul>
+          <button class="btn-pricing-outline" onclick="showTab('assessment')">Get Started →</button>
+        </div>
+        <div class="pricing-card popular anim anim-2">
+          <div class="pricing-badge">MOST POPULAR</div>
+          <h3 class="pricing-name">CareerMap Pro</h3>
+          <div class="pricing-price">₦5,000</div>
+          <div class="pricing-desc">One-time payment</div>
+          <ul class="pricing-features">
+            <li><span>✓</span> Top 10 career matches</li>
+            <li><span>✓</span> Full psychometric report</li>
+            <li><span>✓</span> University shortlist (15 schools)</li>
+            <li><span>✓</span> JAMB subject guide</li>
+            <li><span>✓</span> Scholarship finder</li>
+            <li><span>✓</span> PDF Career Roadmap</li>
+            <li><span>✓</span> 30-day email support</li>
+          </ul>
+          <button class="btn-pricing-primary" onclick="showTab('assessment')">Upgrade →</button>
+        </div>
+        <div class="pricing-card anim anim-3">
+          <h3 class="pricing-name">Elite Mentorship</h3>
+          <div class="pricing-price">₦25,000</div>
+          <div class="pricing-desc">One-time payment</div>
+          <ul class="pricing-features">
+            <li><span>✓</span> Everything in Pro</li>
+            <li><span>✓</span> 60-min 1-on-1 session</li>
+            <li><span>✓</span> Parent-inclusive briefing</li>
+            <li><span>✓</span> Personal Statement help</li>
+            <li><span>✓</span> Study-abroad options</li>
+            <li><span>✓</span> 90-day mentor WhatsApp access</li>
+          </ul>
+          <button class="btn-pricing-outline" onclick="showTab('assessment')">Get Mentorship →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Got Questions?</h2>
+        <p class="section-sub">Frequently Asked Questions</p>
+      </div>
+      <div class="faq-wrap">
+        <div class="faq-item anim anim-1">
+          <h3 class="faq-q">Who is WiseSkills for?</h3>
+          <p class="faq-a">Nigerian secondary school students and WAEC/JAMB graduates who want a data-driven, personalised guide to choosing the right university course and career path.</p>
+        </div>
+        <div class="faq-item anim anim-2">
+          <h3 class="faq-q">How accurate is the matching?</h3>
+          <p class="faq-a">Our algorithm analyses over 80 variables including your WAEC grades, JAMB scores, hobbies, and personality profile. Users report a 94% satisfaction rate with their matched career paths.</p>
+        </div>
+        <div class="faq-item anim anim-3">
+          <h3 class="faq-q">What if I have a low JAMB score?</h3>
+          <p class="faq-a">A low JAMB score doesn't close every door. WiseSkills identifies polytechnic routes, direct entry options, and lower cut-off universities that still offer strong career outcomes.</p>
+        </div>
+        <div class="faq-item anim anim-4">
+          <h3 class="faq-q">Do I need my parents' permission?</h3>
+          <p class="faq-a">Not at all — this is your journey. However, the Elite Mentorship plan includes a parent-inclusive career briefing session if you'd like to get your family on board.</p>
+        </div>
+        <div class="faq-item anim anim-5">
+          <h3 class="faq-q">I don't know what I enjoy — can this still help?</h3>
+          <p class="faq-a">Absolutely. Our interest discovery quiz is designed to help you identify what you enjoy even if you've never thought about it formally. Many students discover new passions through the process.</p>
+        </div>
+        <div class="faq-item anim anim-1">
+          <h3 class="faq-q">Is WiseSkills affiliated with JAMB or WAEC?</h3>
+          <p class="faq-a">No, WiseSkills is an independent career guidance platform. Our recommendations are unbiased and based solely on your individual profile.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trending Careers -->
+    <div class="section">
+      <div class="section-top">
+        <h2>Trending Careers</h2>
+        <button class="see-all" onclick="showTab('careers')">View all →</button>
+      </div>
+      <div class="careers-grid" id="home-careers-grid"></div>
+    </div>
+
+    <!-- WA CTA -->
+    <div class="wa-cta anim">
+      <div>
+        <h3>Join Our WhatsApp Community</h3>
+        <p>Get scholarship alerts, career tips and mentorship — directly on WhatsApp</p>
+      </div>
+      <a href="https://wa.me/2348000000000?text=Hi%2C%20I%20need%20help%20with%20my%20career%20roadmap" target="_blank" class="wa-btn">💬 Join on WhatsApp</a>
+    </div>
+
+  </div><!-- /container -->
+</div><!-- /page-home -->
+
+
+<!-- ══════════════════════════════════════════
+     CAREERS PAGE
+════════════════════════════════════════════ -->
+<div id="page-careers" class="page">
+  <div class="container">
+    <h1 class="anim" style="font-size:36px;margin-bottom:8px;">Career Library</h1>
+    <p class="anim anim-1" style="color:var(--muted);margin-bottom:32px;">Explore 15 career paths across all educational routes in Nigeria</p>
+
+    <div class="filters-row anim anim-1">
+      <input type="text" id="career-search" placeholder="Search careers…" oninput="renderCareers()" />
+      <select id="career-pathway" onchange="renderCareers()">
+        <option value="All">All Pathways</option>
+        <option>University</option>
+        <option>Polytechnic</option>
+        <option>Vocational Training</option>
+        <option>College of Education</option>
+      </select>
+      <select id="career-field" onchange="renderCareers()">
+        <option value="All">All Fields</option>
+        <option>Technology</option>
+        <option>Finance</option>
+        <option>Healthcare</option>
+        <option>Engineering</option>
+        <option>Trades</option>
+        <option>Creative</option>
+        <option>Media</option>
+        <option>Legal</option>
+      </select>
+    </div>
+
+    <div class="results-count" id="career-count"></div>
+    <div class="careers-grid" id="careers-grid"></div>
+    <div class="empty" id="careers-empty" style="display:none;">No careers found. Try a different filter.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SCHOLARSHIPS PAGE
+════════════════════════════════════════════ -->
+<div id="page-scholarships" class="page">
+  <div class="container">
+    <h1 class="anim" style="font-size:36px;margin-bottom:8px;">Scholarship Tracker</h1>
+    <p class="anim anim-1" style="color:var(--muted);margin-bottom:32px;">Find and track Nigerian scholarships relevant to your career path</p>
+
+    <div class="schol-tabs anim anim-1">
+      <button class="schol-tab active" id="schol-tab-all" onclick="setScholTab('all')">All Scholarships</button>
+      <button class="schol-tab" id="schol-tab-saved" onclick="setScholTab('saved')">Saved (0)</button>
+    </div>
+
+    <div class="filters-row anim anim-2">
+      <input type="text" id="schol-search" placeholder="Search scholarships…" oninput="renderScholarships()" />
+      <select id="schol-field" onchange="renderScholarships()">
+        <option value="All">All Fields</option>
+        <option>Engineering</option>
+        <option>Technology</option>
+        <option>Sciences</option>
+        <option>Healthcare</option>
+        <option>Finance</option>
+        <option>Economics</option>
+      </select>
+    </div>
+
+    <div id="schol-list"></div>
+    <div class="empty" id="schol-empty" style="display:none;"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     ASSESSMENT PAGE
+════════════════════════════════════════════ -->
+<div id="page-assessment" class="page">
+  <div id="assessment-questions" class="container-xs"></div>
+  <div id="assessment-results" class="container-sm" style="display:none;"></div>
+</div>
+
+
+<!-- Floating WhatsApp -->
+<a href="https://wa.me/2348000000000?text=Hi%2C%20I%20need%20help%20with%20my%20career%20roadmap" target="_blank" class="wa-float" title="Chat on WhatsApp">💬</a>
+
+
+<script>
+/* ─── DATA ─────────────────────────────────────────────────────────────────── */
+const CAREERS = [
+  { id:1, title:"Software Engineering", emoji:"💻", subject:"Mathematics", grade:"A1", field:"Technology", pathway:"University", desc:"Build systems, apps and platforms that power the world.", income:"₦400k–₦2M/mo", growth:"High", jamb:"240+", waecRequirement:"B2 in Maths" },
+  { id:2, title:"Actuarial Science", emoji:"📊", subject:"Mathematics", grade:"A1", field:"Finance", pathway:"University", desc:"Use statistics to assess financial risk for businesses.", income:"₦300k–₦1.5M/mo", growth:"High", jamb:"250+", waecRequirement:"B2 in Maths" },
+  { id:3, title:"Data Science", emoji:"🧮", subject:"Mathematics", grade:"A1", field:"Technology", pathway:"University", desc:"Extract insights from large datasets to guide decisions.", income:"₦350k–₦1.8M/mo", growth:"Very High", jamb:"240+", waecRequirement:"B2 in Maths" },
+  { id:4, title:"Medicine", emoji:"🩺", subject:"Sciences", grade:"A1", field:"Healthcare", pathway:"University", desc:"Diagnose, treat, and prevent illness to improve lives.", income:"₦200k–₦1.2M/mo", growth:"Stable", jamb:"280+", waecRequirement:"B3 in Sciences" },
+  { id:5, title:"Electrical Engineering", emoji:"⚡", subject:"Sciences", grade:"A1", field:"Engineering", pathway:"University", desc:"Design electrical systems from circuits to power grids.", income:"₦250k–₦900k/mo", growth:"High", jamb:"240+", waecRequirement:"B2 in Maths" },
+  { id:6, title:"Electrical Installation", emoji:"🔌", subject:"Sciences", grade:"C4–C6", field:"Trades", pathway:"Vocational Training", desc:"Install and maintain electrical systems in homes and buildings.", income:"₦80k–₦400k/mo", growth:"Stable", jamb:"180+", waecRequirement:"C4 in Sciences" },
+  { id:7, title:"Fashion Design", emoji:"👗", subject:"Arts, Music & Tech Drawing", grade:"B2–B3", field:"Creative", pathway:"Vocational Training", desc:"Create clothing and accessories with artistic flair.", income:"₦60k–₦600k/mo", growth:"Medium", jamb:"180+", waecRequirement:"B3 in Arts" },
+  { id:8, title:"Accounting", emoji:"🧾", subject:"Social Studies & Commerce", grade:"B2–B3", field:"Finance", pathway:"University", desc:"Manage financial records, audits, and business finances.", income:"₦150k–₦700k/mo", growth:"Stable", jamb:"220+", waecRequirement:"C4 in Maths" },
+  { id:9, title:"Mass Communication", emoji:"📡", subject:"Literature & Languages", grade:"B2–B3", field:"Media", pathway:"University", desc:"Tell stories through journalism, broadcasting, and PR.", income:"₦80k–₦500k/mo", growth:"Medium", jamb:"200+", waecRequirement:"B3 in English" },
+  { id:10, title:"Film Production", emoji:"🎬", subject:"Arts, Music & Tech Drawing", grade:"B2–B3", field:"Creative", pathway:"Polytechnic", desc:"Direct, produce, and edit compelling film and video content.", income:"₦100k–₦800k/mo", growth:"High", jamb:"200+", waecRequirement:"B3 in Arts" },
+  { id:11, title:"Nursing", emoji:"🏥", subject:"Sciences", grade:"B2–B3", field:"Healthcare", pathway:"College of Education", desc:"Provide compassionate patient care in hospitals and clinics.", income:"₦120k–₦600k/mo", growth:"Stable", jamb:"220+", waecRequirement:"B3 in Sciences" },
+  { id:12, title:"Plumbing", emoji:"🔧", subject:"Sciences", grade:"C4–C6", field:"Trades", pathway:"Vocational Training", desc:"Install and repair water and gas systems in buildings.", income:"₦70k–₦350k/mo", growth:"Stable", jamb:"180+", waecRequirement:"C4 in Sciences" },
+  { id:13, title:"Game Design", emoji:"🎮", subject:"Mathematics", grade:"B2–B3", field:"Technology", pathway:"Polytechnic", desc:"Design mechanics, worlds, and characters for video games.", income:"₦150k–₦900k/mo", growth:"High", jamb:"220+", waecRequirement:"B2 in Maths" },
+  { id:14, title:"Music Production", emoji:"🎵", subject:"Arts, Music & Tech Drawing", grade:"C4–C6", field:"Creative", pathway:"Vocational Training", desc:"Produce, record, and mix professional music tracks.", income:"₦80k–₦700k/mo", growth:"Medium", jamb:"180+", waecRequirement:"C4 in Arts" },
+  { id:15, title:"Law", emoji:"⚖️", subject:"Literature & Languages", grade:"A1", field:"Legal", pathway:"University", desc:"Represent clients and navigate the justice system.", income:"₦200k–₦1.5M/mo", growth:"Stable", jamb:"260+", waecRequirement:"B2 in English" },
+];
+
+const SCHOLARSHIPS = [
+  { id:1, name:"MTN Foundation Scholarship", provider:"MTN Nigeria", amount:"₦200,000/yr", deadline:"2026-05-15", eligibility:"JAMB 200+, any state", careers:["Technology","Engineering","Sciences"], tag:"High demand", link:"#" },
+  { id:2, name:"NNPC/SNEPCo National Merit Award", provider:"NNPC & Shell", amount:"₦300,000/yr", deadline:"2026-04-30", eligibility:"JAMB 250+, Science courses", careers:["Engineering","Sciences","Technology"], tag:"Deadline: 30 days", link:"#" },
+  { id:3, name:"PTDF Undergraduate Scholarship", provider:"PTDF", amount:"₦350,000/yr", deadline:"2026-06-01", eligibility:"JAMB 220+, STEM courses", careers:["Engineering","Technology"], tag:"New", link:"#" },
+  { id:4, name:"Agbami Medical Scholarship", provider:"Chevron/Texaco", amount:"₦400,000/yr", deadline:"2026-05-20", eligibility:"Admitted to Medicine/Pharmacy", careers:["Healthcare"], tag:"High demand", link:"#" },
+  { id:5, name:"CBN Bankers' Committee Scholarship", provider:"CBN", amount:"₦250,000/yr", deadline:"2026-07-10", eligibility:"JAMB 200+, any state", careers:["Finance","Economics"], tag:"", link:"#" },
+  { id:6, name:"Oando Foundation Scholarship", provider:"Oando PLC", amount:"₦200,000/yr", deadline:"2026-06-15", eligibility:"Delta/Ondo/Lagos state, STEM", careers:["Engineering","Sciences"], tag:"New", link:"#" },
+  { id:7, name:"Niger Delta Development Commission", provider:"NDDC", amount:"₦500,000/yr", deadline:"2026-04-25", eligibility:"South-South states", careers:["All fields"], tag:"Deadline: 7 days", link:"#" },
+  { id:8, name:"Lagos State Government Scholarship", provider:"Lagos State", amount:"₦180,000/yr", deadline:"2026-08-01", eligibility:"Lagos state indigenes", careers:["All fields"], tag:"", link:"#" },
+];
+
+const SUBJECTS = [
+  { label:"📐 Mathematics", value:"Mathematics" },
+  { label:"🔬 Sciences", value:"Sciences" },
+  { label:"📖 Literature & Languages", value:"Literature & Languages" },
+  { label:"🏛️ Social Studies & Commerce", value:"Social Studies & Commerce" },
+  { label:"🎨 Arts, Music & Tech Drawing", value:"Arts, Music & Tech Drawing" },
+];
+
+const GRADES = ["A1","B2–B3","C4–C6","Below C6"];
+
+const QUESTIONS = [
+  { id:"subject", q:"What is your strongest WAEC subject area?", options: SUBJECTS.map(s => s.value) },
+  { id:"grade", q:"What was your best WAEC grade?", options: GRADES },
+  { id:"style", q:"How do you prefer to work?", options:["With data & numbers","With people & communication","With hands & tools","With ideas & creativity"] },
+  { id:"env", q:"Ideal work environment?", options:["Office / corporate","Hospital / clinic","Outdoors / field","Studio / workshop"] },
+  { id:"priority", q:"What matters most in your career?", options:["High income potential","Making social impact","Creative expression","Job security"] },
+  { id:"pathway", q:"Preferred educational route?", options:["University (degree)","Polytechnic (HND)","College of Education","Vocational Training"] },
+];
+
+/* ─── STATE ───────────────────────────────────────────────────────────────── */
+let savedScholarships = [];
+let checklists = {};
+let currentScholTab = 'all';
+
+// Quick Match state
+let qmStep = 0;
+let qmSubject = null;
+
+// Assessment state
+let assessStep = 0;
+let assessAnswers = {};
+
+/* ─── TAB NAVIGATION ──────────────────────────────────────────────────────── */
+function showTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+  if (tab === 'careers') renderCareers();
+  if (tab === 'scholarships') renderScholarships();
+  if (tab === 'assessment') { assessStep = 0; assessAnswers = {}; renderAssessment(); }
+  window.scrollTo(0, 0);
+}
+
+/* ─── GROWTH BADGE ────────────────────────────────────────────────────────── */
+function growthBadge(g) {
+  const map = { "Very High":"badge-green", "High":"badge-blue", "Medium":"badge-accent", "Stable":"badge-muted" };
+  return `<span class="badge ${map[g] || 'badge-muted'}">${g}</span>`;
+}
+
+/* ─── CAREER CARD ─────────────────────────────────────────────────────────── */
+function careerCardHTML(c, delay) {
+  const d = Math.min(delay + 1, 5);
+  return `
+    <div class="career-card anim anim-${d}" onclick="toggleCareerCard(this)">
+      <div class="career-card-top">
+        <span class="career-emoji">${c.emoji}</span>
+        ${growthBadge(c.growth)}
+      </div>
+      <div class="career-title">${c.title}</div>
+      <div class="career-desc">${c.desc}</div>
+      <div class="career-pills">
+        <span class="pill">${c.pathway}</span>
+        <span class="pill">${c.field}</span>
+      </div>
+      <div class="career-details">
+        <div class="career-detail-row"><span class="detail-label">Est. Income</span><span class="detail-value green">${c.income}</span></div>
+        <div class="career-detail-row"><span class="detail-label">Best subject</span><span class="detail-value">${c.subject}</span></div>
+        <div class="career-detail-row"><span class="detail-label">Min. grade</span><span class="detail-value">${c.grade}</span></div>
+        <div class="career-detail-row"><span class="detail-label">JAMB requirement</span><span class="detail-value">${c.jamb || 'Varies'}</span></div>
+        <div class="career-detail-row"><span class="detail-label">WAEC requirement</span><span class="detail-value">${c.waecRequirement || c.grade}</span></div>
+      </div>
+    </div>`;
+}
+
+function toggleCareerCard(el) {
+  const details = el.querySelector('.career-details');
+  details.classList.toggle('open');
+}
+
+/* ─── HOME CAREERS GRID ───────────────────────────────────────────────────── */
+function renderHomeCareers() {
+  const grid = document.getElementById('home-careers-grid');
+  grid.innerHTML = CAREERS.slice(0, 6).map((c, i) => careerCardHTML(c, i)).join('');
+}
+
+/* ─── CAREERS PAGE ────────────────────────────────────────────────────────── */
+function renderCareers() {
+  const q = document.getElementById('career-search').value.toLowerCase();
+  const pathway = document.getElementById('career-pathway').value;
+  const field = document.getElementById('career-field').value;
+
+  const filtered = CAREERS.filter(c => {
+    const matchQ = !q || c.title.toLowerCase().includes(q) || c.field.toLowerCase().includes(q);
+    const matchP = pathway === 'All' || c.pathway === pathway;
+    const matchF = field === 'All' || c.field === field;
+    return matchQ && matchP && matchF;
+  });
+
+  const grid = document.getElementById('careers-grid');
+  const empty = document.getElementById('careers-empty');
+  const count = document.getElementById('career-count');
+
+  count.textContent = `${filtered.length} result${filtered.length !== 1 ? 's' : ''}`;
+
+  if (filtered.length) {
+    grid.innerHTML = filtered.map((c, i) => careerCardHTML(c, i % 5)).join('');
+    grid.style.display = 'grid';
+    empty.style.display = 'none';
+  } else {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+  }
+}
+
+/* ─── SCHOLARSHIP HELPERS ─────────────────────────────────────────────────── */
+function daysLeft(deadline) {
+  const d = new Date(deadline) - new Date();
+  return Math.ceil(d / 86400000);
+}
+
+function formatDate(deadline) {
+  return new Date(deadline).toLocaleDateString('en-NG', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function tagHTML(tag) {
+  if (!tag) return '';
+  if (tag.includes('7 days')) return `<span class="tag tag-urgent">${tag}</span>`;
+  if (tag === 'New') return `<span class="tag tag-new">${tag}</span>`;
+  return `<span class="tag tag-high">${tag}</span>`;
+}
+
+function setScholTab(tab) {
+  currentScholTab = tab;
+  document.getElementById('schol-tab-all').classList.toggle('active', tab === 'all');
+  document.getElementById('schol-tab-saved').classList.toggle('active', tab === 'saved');
+  renderScholarships();
+}
+
+function updateSavedCount() {
+  document.getElementById('schol-tab-saved').textContent = `Saved (${savedScholarships.length})`;
+}
+
+function toggleSave(id) {
+  if (savedScholarships.includes(id)) {
+    savedScholarships = savedScholarships.filter(x => x !== id);
+  } else {
+    savedScholarships.push(id);
+  }
+  updateSavedCount();
+  renderScholarships();
+}
+
+function toggleCheck(scholId, item) {
+  if (!checklists[scholId]) checklists[scholId] = {};
+  checklists[scholId][item] = !checklists[scholId][item];
+  // Update just the checklist without full re-render
+  const container = document.querySelector(`[data-schol-id="${scholId}"] .checklist-wrap`);
+  if (container) {
+    renderChecklist(container, scholId);
+  }
+}
+
+const CHECKLIST_ITEMS = ["Uploaded WAEC result","Requested transcript","Completed application form","Written personal statement","Collected reference letter"];
+
+function renderChecklist(container, scholId) {
+  const checks = checklists[scholId] || {};
+  const done = Object.values(checks).filter(Boolean).length;
+  container.innerHTML = `
+    <div class="checklist-label">Application Checklist</div>
+    <div class="checklist-items">
+      ${CHECKLIST_ITEMS.map(item => `
+        <label class="checklist-item">
+          <input type="checkbox" ${checks[item] ? 'checked' : ''} onchange="toggleCheck(${scholId}, '${item}')" />
+          <span class="${checks[item] ? 'checked' : ''}">${item}</span>
+        </label>`).join('')}
+    </div>
+    <div class="checklist-count">${done}/${CHECKLIST_ITEMS.length} completed</div>`;
+}
+
+function renderScholarships() {
+  const q = document.getElementById('schol-search').value.toLowerCase();
+  const field = document.getElementById('schol-field').value;
+
+  let list = SCHOLARSHIPS;
+  if (currentScholTab === 'saved') list = list.filter(s => savedScholarships.includes(s.id));
+
+  list = list.filter(s => {
+    const matchQ = !q || s.name.toLowerCase().includes(q) || s.provider.toLowerCase().includes(q);
+    const matchF = field === 'All' || s.careers.includes(field) || s.careers.includes('All fields');
+    return matchQ && matchF;
+  });
+
+  const container = document.getElementById('schol-list');
+  const empty = document.getElementById('schol-empty');
+
+  if (!list.length) {
+    container.innerHTML = '';
+    empty.textContent = currentScholTab === 'saved' ? 'No saved scholarships yet.' : 'No scholarships found.';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const days = id => daysLeft(SCHOLARSHIPS.find(s => s.id === id)?.deadline || '');
+
+  container.innerHTML = list.map((s, i) => {
+    const isSaved = savedScholarships.includes(s.id);
+    const dl = daysLeft(s.deadline);
+    return `
+      <div class="schol-card ${isSaved ? 'saved' : ''} anim anim-${Math.min(i+1,5)}" data-schol-id="${s.id}">
+        <div class="schol-card-top">
+          <div class="schol-info">
+            <div class="schol-name-row">
+              <span class="schol-name">${s.name}</span>
+              ${tagHTML(s.tag)}
+            </div>
+            <div class="schol-provider">by ${s.provider}</div>
+            <div class="schol-meta">
+              <span>💰 <strong style="color:var(--green)">${s.amount}</strong></span>
+              <span>📅 <strong style="color:${dl <= 14 ? 'var(--red)' : 'var(--text)'}">Deadline: ${formatDate(s.deadline)}</strong> (${dl}d left)</span>
+              <span style="color:var(--muted)">🎯 ${s.eligibility}</span>
+            </div>
+          </div>
+          <div class="schol-actions">
+            <button class="btn-save ${isSaved ? 'saved' : ''}" onclick="toggleSave(${s.id})">
+              ${isSaved ? '★ Saved' : '☆ Save'}
+            </button>
+            <a href="${s.link}" class="btn-apply">Apply →</a>
+          </div>
+        </div>
+        ${isSaved ? `<div class="checklist-wrap open" id="checklist-${s.id}"></div>` : ''}
+      </div>`;
+  }).join('');
+
+  // Populate checklists
+  list.filter(s => savedScholarships.includes(s.id)).forEach(s => {
+    const el = document.getElementById(`checklist-${s.id}`);
+    if (el) renderChecklist(el, s.id);
+  });
+}
+
+/* ─── ASSESSMENT PAGE ─────────────────────────────────────────────────────── */
+function renderAssessment() {
+  const qWrap = document.getElementById('assessment-questions');
+  const rWrap = document.getElementById('assessment-results');
+  qWrap.style.display = 'block';
+  rWrap.style.display = 'none';
+
+  const q = QUESTIONS[assessStep];
+  const pct = Math.round((assessStep / QUESTIONS.length) * 100);
+
+  qWrap.innerHTML = `
+    <div class="assessment-progress anim">
+      <div class="assessment-progress-row">
+        <span>Question ${assessStep + 1} of ${QUESTIONS.length}</span>
+        <span>${pct}% complete</span>
+      </div>
+      <div class="assessment-bar">
+        <div class="assessment-bar-fill" style="width:${pct}%"></div>
+      </div>
+    </div>
+    <h2 class="assessment-q anim anim-1">${q.q}</h2>
+    <div class="assessment-options">
+      ${q.options.map((opt, i) => `
+        <button class="assessment-option anim anim-${Math.min(i+2,5)}" onclick="assessAnswer('${opt.replace(/'/g,"\\'")}')">
+          ${opt}
+        </button>`).join('')}
+    </div>
+    ${assessStep > 0 ? `<button class="btn-back" onclick="assessBack()">← Back</button>` : ''}`;
+}
+
+function assessAnswer(val) {
+  const q = QUESTIONS[assessStep];
+  assessAnswers[q.id] = val;
+  if (assessStep < QUESTIONS.length - 1) {
+    assessStep++;
+    renderAssessment();
+  } else {
+    showAssessmentResults();
+  }
+}
+
+function assessBack() {
+  if (assessStep > 0) { assessStep--; renderAssessment(); }
+}
+
+function showAssessmentResults() {
+  const ans = assessAnswers;
+  const scored = CAREERS.map(c => {
+    let score = 0;
+    if (c.subject === ans.subject) score += 4;
+    if (c.grade === ans.grade) score += 3;
+    if (ans.pathway && c.pathway.toLowerCase().includes(ans.pathway.split(' ')[0].toLowerCase())) score += 3;
+    if (ans.style === 'With data & numbers' && ['Technology','Finance'].includes(c.field)) score += 2;
+    if (ans.style === 'With people & communication' && ['Healthcare','Media','Legal'].includes(c.field)) score += 2;
+    if (ans.style === 'With hands & tools' && ['Trades','Engineering'].includes(c.field)) score += 2;
+    if (ans.style === 'With ideas & creativity' && c.field === 'Creative') score += 2;
+    if (ans.priority === 'High income potential' && ['Very High','High'].includes(c.growth)) score += 1;
+    if (ans.priority === 'Job security' && c.growth === 'Stable') score += 1;
+    if (ans.priority === 'Creative expression' && c.field === 'Creative') score += 1;
+    return { ...c, score };
+  });
+  scored.sort((a, b) => b.score - a.score);
+  const top10 = scored.slice(0, 10);
+
+  document.getElementById('assessment-questions').style.display = 'none';
+  const rWrap = document.getElementById('assessment-results');
+  rWrap.style.display = 'block';
+
+  rWrap.innerHTML = `
+    <div class="results-header anim">
+      <span style="font-size:32px">🎯</span>
+      <div>
+        <h1 style="font-size:28px;">Your Top 10 Career Matches</h1>
+        <p style="color:var(--muted);font-size:14px;">Based on your subjects, grades, and preferences</p>
+      </div>
+    </div>
+    <div class="results-list">
+      ${top10.map((c, i) => `
+        <div class="result-item ${i===0?'top':''} anim anim-${Math.min(i+1,5)}">
+          <div class="result-rank ${i===0?'top':''}">#${i+1}</div>
+          <span class="result-emoji">${c.emoji}</span>
+          <div class="result-info">
+            <div class="result-title">${c.title}</div>
+            <div class="result-sub">${c.field} · ${c.pathway}</div>
+          </div>
+          <div class="result-right">
+            <div class="result-income">${c.income}</div>
+            ${growthBadge(c.growth)}
+          </div>
+        </div>`).join('')}
+    </div>
+    <button onclick="retakeAssessment()" style="margin-top:32px;background:none;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:10px 20px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;">
+      ↺ Retake Assessment
+    </button>`;
+}
+
+function retakeAssessment() {
+  assessStep = 0;
+  assessAnswers = {};
+  document.getElementById('assessment-results').style.display = 'none';
+  renderAssessment();
+}
+
+/* ─── QUICK MATCH WIDGET ──────────────────────────────────────────────────── */
+function renderQuickMatch() {
+  const container = document.getElementById('qm-container');
+  if (!container) return;
+
+  if (qmStep === 0) {
+    container.innerHTML = `
+      <div class="qm-progress-row"><span>Step 1 of 2</span><span>Favourite subject</span></div>
+      <div class="qm-bar"><div class="qm-bar-fill" style="width:50%"></div></div>
+      <div class="qm-question">What's your favourite subject?</div>
+      ${SUBJECTS.map(s => `<button class="qm-option" onclick="qmChooseSubject('${s.value}')">${s.label}</button>`).join('')}`;
+  } else if (qmStep === 1) {
+    container.innerHTML = `
+      <div class="qm-progress-row"><span>Step 2 of 2</span><span>Best WAEC grade</span></div>
+      <div class="qm-bar"><div class="qm-bar-fill" style="width:100%"></div></div>
+      <div class="qm-question">What's your best WAEC grade?</div>
+      ${GRADES.map(g => `<button class="qm-option" onclick="qmChooseGrade('${g}')">${g}</button>`).join('')}`;
+  }
+}
+
+function qmChooseSubject(sub) {
+  qmSubject = sub;
+  qmStep = 1;
+  renderQuickMatch();
+}
+
+function qmChooseGrade(grade) {
+  // Compute results
+  let matches = CAREERS.filter(c => c.subject === qmSubject);
+  if (grade && grade !== 'Below C6') matches = matches.filter(c => c.grade === grade || c.grade === 'C4–C6');
+  if (!matches.length) matches = CAREERS.filter(c => c.subject === qmSubject);
+  const top3 = matches.slice(0, 3);
+
+  const container = document.getElementById('qm-container');
+  container.innerHTML = `
+    <p style="color:var(--muted);font-size:13px;margin-bottom:8px;">Based on your answers, here are 3 sample matches:</p>
+    ${top3.map((c,i) => `
+      <div class="qm-result-item anim anim-${i+1}">
+        <span style="font-size:24px">${c.emoji}</span>
+        <div>
+          <div style="font-weight:600;font-size:14px">${c.title}</div>
+          <div style="color:var(--muted);font-size:12px">${c.field} · ${c.pathway}</div>
+        </div>
+      </div>`).join('')}
+    <div class="qm-cta">🎯 See your full 10-match report by completing the full assessment →</div>
+    <button onclick="showTab('assessment')" style="background:var(--accent);color:#000;border:none;border-radius:8px;padding:10px 0;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;cursor:pointer;width:100%;margin-top:4px;">
+      Start Full Assessment
+    </button>
+    <button onclick="resetQuickMatch()" style="background:none;color:var(--muted);border:none;cursor:pointer;font-size:13px;margin-top:8px;width:100%;">↺ Try again</button>`;
+}
+
+function resetQuickMatch() {
+  qmStep = 0;
+  qmSubject = null;
+  renderQuickMatch();
+}
+
+/* ─── INIT ────────────────────────────────────────────────────────────────── */
+renderHomeCareers();
+renderQuickMatch();
+renderScholarships();
+</script>
+</body>
+</html>
